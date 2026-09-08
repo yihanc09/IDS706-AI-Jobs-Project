@@ -34,6 +34,7 @@ Some important variables include:
 IDS706-AI-Jobs-Project/
 ├── ai_jobs_market_2025_2026.csv
 ├── analysis.py
+├── polars_comparison.py
 ├── README.md
 └── requirements.txt
 ```
@@ -43,6 +44,7 @@ IDS706-AI-Jobs-Project/
 The project uses Python and the following packages:
 
 - pandas
+- polars
 - matplotlib
 - seaborn
 - scikit-learn
@@ -57,6 +59,12 @@ Run the analysis with:
 
 ```bash
 python3 analysis.py
+```
+
+Run the Pandas and Polars performance comparison with:
+
+```bash
+python3 polars_comparison.py
 ```
 
 ## Data Inspection
@@ -175,6 +183,32 @@ However, the model's **Mean Absolute Error (MAE)** is approximately **$54,663**,
 The **R-squared value is approximately -0.028**, indicating that years of experience alone performs poorly as a predictor of annual salary on the testing data.
 
 This is an important result rather than simply a failed model. Salary differences in the AI job market may depend on many other factors, such as job category, industry, location, seniority, and specialization. A future version of the project could explore additional features.
+
+## Pandas vs. Polars Performance Comparison
+
+In addition to the Pandas analysis, I used Polars to perform the same dataframe operations and compare their performance. The comparison includes filtering jobs with an annual salary above $100,000, grouping jobs by category and calculating average annual salary, and sorting jobs by annual salary.
+
+Each operation was repeated 100 times, and the average execution time was calculated.
+
+The performance results were:
+
+```text
+Filtering:
+Pandas: 0.0003617371 seconds
+Polars: 0.0011575171 seconds
+
+Grouping and aggregation:
+Pandas: 0.0001937108 seconds
+Polars: 0.0007323567 seconds
+
+Sorting:
+Pandas: 0.0003118437 seconds
+Polars: 0.0002478483 seconds
+```
+
+For this dataset, Pandas was faster for filtering and grouping, while Polars was slightly faster for sorting. Since the dataset contains only 1,500 rows, all of the operations completed very quickly and the performance differences were small.
+
+The Pandas and Polars grouping operations also produced the same average salary results by job category, showing that both approaches performed the same analysis despite using different dataframe libraries.
 
 ## Key Findings
 
