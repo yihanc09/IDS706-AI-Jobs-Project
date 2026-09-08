@@ -9,9 +9,7 @@ The goal of this project is to practice basic data analysis using Pandas, create
 
 ## Dataset
 
-The dataset used in this project is:
-
-`ai_jobs_market_2025_2026.csv`
+The dataset used in this project, `ai_jobs_market_2025_2026.csv`, was obtained from Kaggle [https://www.kaggle.com/datasets/alitaqishah/ai-jobs-market-2025-2026-salaries?utm_source=chatgpt.com].
 
 It contains 1,500 observations and 25 columns.
 
