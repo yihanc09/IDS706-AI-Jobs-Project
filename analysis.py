@@ -96,7 +96,7 @@ plt.show()
 # Distribution of annual salaries
 plt.figure(figsize=(8, 5))
 
-plt.hist(df["figures/annual_salary_usd"], bins=20)
+plt.hist(df["annual_salary_usd"], bins=20)
 
 plt.title("Distribution of Annual Salaries")
 plt.xlabel("Annual Salary (USD)")
