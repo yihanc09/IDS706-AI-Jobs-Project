@@ -115,7 +115,7 @@ The dataset contains substantially more AI Engineering jobs than any other categ
 
 This horizontal bar chart compares the average annual salary across AI job categories.
 
-![Average Annual Salary by AI Job Category](salary_by_category.png)
+![Average Annual Salary by AI Job Category](figures/salary_by_category.png)
 
 The visualization shows substantial salary differences between job categories. Architecture has the highest average salary, while Business and Governance are among the lower-paying categories in this dataset.
 
@@ -123,7 +123,7 @@ The visualization shows substantial salary differences between job categories. A
 
 This histogram shows the overall distribution of annual salaries in the dataset.
 
-![Distribution of Annual Salaries](salary_distribution.png)
+![Distribution of Annual Salaries](figures/salary_distribution.png)
 
 The salaries cover a wide range, from $90,000 to $384,000, with an average salary of approximately $194,892.
 
@@ -131,7 +131,7 @@ The salaries cover a wide range, from $90,000 to $384,000, with an average salar
 
 This boxplot compares salary distributions across different experience levels.
 
-![Annual Salary by Experience Level](salary_by_experience_level.png)
+![Annual Salary by Experience Level](figures/salary_by_experience_level.png)
 
 The plot helps show both the typical salary and the variation in salaries within each experience-level group.
 
@@ -139,7 +139,7 @@ The plot helps show both the typical salary and the variation in salaries within
 
 This scatter plot examines the relationship between years of experience and annual salary.
 
-![Years of Experience vs Annual Salary](experience_vs_salary.png)
+![Years of Experience vs Annual Salary](figures/experience_vs_salary.png)
 
 The points show substantial salary variation even among jobs requiring similar numbers of years of experience. This suggests that years of experience alone may not be enough to explain differences in salary.
 

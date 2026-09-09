@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -79,6 +80,8 @@ print(job_count_by_category)
 
 
 # Visualization
+os.makedirs("figures", exist_ok=True)
+
 # Average Salary by Job Category
 salary_by_category.sort_values().plot(kind="barh", figsize=(9, 6))
 
@@ -87,20 +90,20 @@ plt.xlabel("Average Annual Salary (USD)")
 plt.ylabel("Job Category")
 plt.tight_layout()
 
-plt.savefig("salary_by_category.png")
+plt.savefig("figures/salary_by_category.png")
 plt.show()
 
 # Distribution of annual salaries
 plt.figure(figsize=(8, 5))
 
-plt.hist(df["annual_salary_usd"], bins=20)
+plt.hist(df["figures/annual_salary_usd"], bins=20)
 
 plt.title("Distribution of Annual Salaries")
 plt.xlabel("Annual Salary (USD)")
 plt.ylabel("Number of Jobs")
 plt.tight_layout()
 
-plt.savefig("salary_distribution.png")
+plt.savefig("figures/salary_distribution.png")
 plt.show()
 
 # Salary by experience level
@@ -113,7 +116,7 @@ plt.xlabel("Experience Level")
 plt.ylabel("Annual Salary (USD)")
 plt.tight_layout()
 
-plt.savefig("salary_by_experience_level.png")
+plt.savefig("figures/salary_by_experience_level.png")
 plt.show()
 
 # Years of experience vs annual salary
@@ -128,7 +131,7 @@ plt.xlabel("Years of Experience")
 plt.ylabel("Annual Salary (USD)")
 plt.tight_layout()
 
-plt.savefig("experience_vs_salary.png")
+plt.savefig("figures/experience_vs_salary.png")
 plt.show()
 
 
