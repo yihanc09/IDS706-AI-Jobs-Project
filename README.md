@@ -184,29 +184,41 @@ This is an important result rather than simply a failed model. Salary difference
 
 ## Pandas vs. Polars Performance Comparison
 
-In addition to the Pandas analysis, I used Polars to perform the same dataframe operations and compare their performance. The comparison includes filtering jobs with an annual salary above $100,000, grouping jobs by category and calculating average annual salary, and sorting jobs by annual salary.
+In addition to the Pandas analysis, I used Polars to perform the same dataframe operations and compare their performance. The comparison included filtering jobs in the USA, filtering fully remote jobs, filtering fully remote jobs in the USA, filtering jobs with an annual salary above $200,000, calculating the average salary by job category, and counting the number of jobs by job category.
 
 Each operation was repeated 100 times, and the average execution time was calculated.
 
 The performance results were:
 
 ```text
-Filtering:
-Pandas: 0.0003617371 seconds
-Polars: 0.0011575171 seconds
+Filter: USA jobs
+Pandas: 0.000313 seconds
+Polars: 0.001163 seconds
 
-Grouping and aggregation:
-Pandas: 0.0001937108 seconds
-Polars: 0.0007323567 seconds
+Filter: fully remote jobs
+Pandas: 0.000263 seconds
+Polars: 0.001013 seconds
 
-Sorting:
-Pandas: 0.0003118437 seconds
-Polars: 0.0002478483 seconds
+Filter: fully remote USA jobs
+Pandas: 0.000345 seconds
+Polars: 0.000987 seconds
+
+Filter: salary above $200,000
+Pandas: 0.000216 seconds
+Polars: 0.001025 seconds
+
+Group by job category: average salary
+Pandas: 0.000213 seconds
+Polars: 0.000750 seconds
+
+Group by job category: job count
+Pandas: 0.000172 seconds
+Polars: 0.000226 seconds
 ```
 
 For this dataset, Pandas was faster for filtering and grouping, while Polars was slightly faster for sorting. Since the dataset contains only 1,500 rows, all of the operations completed very quickly and the performance differences were small.
 
-The Pandas and Polars grouping operations also produced the same average salary results by job category, showing that both approaches performed the same analysis despite using different dataframe libraries.
+The Pandas and Polars analyses also produced the same results. For example, both returned 515 USA jobs, 445 fully remote jobs, 148 fully remote USA jobs, and 607 jobs with salaries above $200,000. The grouped average salaries and job counts by category were also consistent between the two libraries.
 
 ## Key Findings
 
