@@ -5,11 +5,23 @@
 
 This project explores an AI jobs market dataset containing 1,500 job postings and 25 variables. The dataset includes information about job titles, job categories, experience requirements, salaries, locations, remote work options, industries, and AI-related job characteristics.
 
-The goal of this project is to practice basic data analysis using Pandas, create visualizations with Matplotlib and Seaborn, and explore a simple machine learning algorithm. I use linear regression to examine whether years of experience can help predict annual salary.
+The project was initially developed as a basic data analysis workflow using Pandas, Matplotlib, Seaborn, and scikit-learn. It has since been refactored into reusable Python functions and extended with automated testing and continuous integration to make the analysis more reproducible and reliable.
+
+The analysis includes:
+
+- Data loading and inspection
+- Filtering and grouping
+- Exploratory data visualization
+- Multiple linear regression for salary prediction
+- Pandas and Polars performance comparison
+- Unit and system testing with `pytest`
+- Continuous integration with GitHub Actions
 
 ## Dataset
 
-The dataset used in this project, `ai_jobs_market_2025_2026.csv`, was obtained from Kaggle [here](https://www.kaggle.com/datasets/alitaqishah/ai-jobs-market-2025-2026-salaries).
+The dataset used in this project, `ai_jobs_market_2025_2026.csv`, was obtained from Kaggle:
+
+[AI Jobs Market 2025–2026 & Salaries](https://www.kaggle.com/datasets/alitaqishah/ai-jobs-market-2025-2026-salaries)
 
 It contains 1,500 observations and 25 columns.
 
@@ -25,17 +37,32 @@ Some important variables include:
 - `industry`: Industry of the employer
 - `demand_score`: Measure of demand for the position
 - `is_llm_role`: Indicates whether the position is related to large language models
+- `is_senior`: Indicates whether the position is a senior role
+- `is_remote_friendly`: Indicates whether the position supports remote work
 
 ## Project Structure
 
 ```text
 IDS706-AI-Jobs-Project/
+├── .github/
+│   └── workflows/
+│       └── test.yml
+├── figures/
+├── src/
+│   ├── part1_wk1-analysis.py
+│   └── main.py
+├── tests/
+│   └── test_main.py
 ├── ai_jobs_market_2025_2026.csv
-├── analysis.py
 ├── polars_comparison.py
-├── README.md
-└── requirements.txt
+├── rust_vs_python_intro.ipynb
+├── Dockerfile
+├── Makefile
+├── requirements.txt
+└── README.md
 ```
+
+The original Week 1 analysis is preserved in `part1_wk1-analysis.py`. The refactored analysis is located in `src/main.py`, where the workflow is organized into reusable functions that can be independently tested.
 
 ## Setup
 
@@ -46,6 +73,7 @@ The project uses Python and the following packages:
 - matplotlib
 - seaborn
 - scikit-learn
+- pytest
 
 Install the required packages with:
 
@@ -53,13 +81,15 @@ Install the required packages with:
 python3 -m pip install -r requirements.txt
 ```
 
-Run the analysis with:
+Run the refactored analysis with:
 
 ```bash
-python3 analysis.py
+python3 src/main.py
 ```
 
-Run the Pandas and Polars performance comparison with:
+The script loads and inspects the dataset, performs filtering and grouping operations, trains the machine learning model, and generates the visualizations in the `figures/` directory.
+
+The Pandas and Polars performance comparison can be run separately with:
 
 ```bash
 python3 polars_comparison.py
@@ -143,44 +173,80 @@ This scatter plot examines the relationship between years of experience and annu
 
 The points show substantial salary variation even among jobs requiring similar numbers of years of experience. This suggests that years of experience alone may not be enough to explain differences in salary.
 
+### 5. Annual Salary by Remote Work Type
+
+![Annual Salary by Remote Work Type](figures/salary_by_remote_work.png)
+
+This boxplot compares salary distributions for different remote work arrangements.
+
+### 6. Annual Salary: LLM vs. Non-LLM Roles
+
+![Annual Salary: LLM vs Non-LLM Roles](figures/salary_by_llm_role.png)
+
+This visualization compares salary distributions between LLM-related and non-LLM roles.
+
+### 7. Average Demand Score by AI Job Category
+
+![Average Demand Score by AI Job Category](figures/demand_by_category.png)
+
+This chart compares average demand scores across AI job categories.
+
+### 8. Demand Score vs. Annual Salary
+
+![Demand Score vs Annual Salary](figures/demand_vs_salary.png)
+
+This plot explores whether jobs with higher demand scores also tend to have higher salaries.
+
 ## Machine Learning
 
 For the machine learning portion of the project, I used a **Linear Regression** model.
 
-The goal was to explore whether `years_of_experience` could be used to predict `annual_salary_usd`.
+The target variable is:
 
-The model uses:
+```text
+annual_salary_usd
+```
 
-- **Input feature (X):** `years_of_experience`
-- **Target (y):** `annual_salary_usd`
+The model uses seven input features:
 
-I split the dataset into:
+```text
+years_of_experience
+demand_score
+ai_salary_premium_pct
+benefits_score_10
+is_senior
+is_remote_friendly
+is_llm_role
+```
+
+The dataset is split into:
 
 - 80% training data
 - 20% testing data
 
-A fixed `random_state=42` was used so that the train/test split is reproducible.
+A fixed `random_state=42` is used to make the train/test split reproducible.
 
-The model was trained on the training data and then used to predict salaries for the testing data.
+Model performance is evaluated using:
+
+- **Mean Absolute Error (MAE)**
+- **R-squared (R²)**
+
+This expanded model allows salary to be explored using multiple job characteristics instead of relying only on years of experience.
 
 ## Model Results
 
 The linear regression produced approximately:
 
 ```text
-Coefficient: 2779.98
-Intercept: 178233.49
-Mean Absolute Error: 54663.13
-R-squared: -0.028
+Mean Absolute Error: $43646.35
+R-squared: 0.265
 ```
 
-The coefficient indicates that the model associates one additional year of experience with approximately **$2,780 higher predicted annual salary**.
+The MAE indicates that the model's salary predictions differ from the actual salaries by approximately **$43,646** on average.
 
-However, the model's **Mean Absolute Error (MAE)** is approximately **$54,663**, meaning its predictions differ from the actual salaries by about $54,663 on average.
+The R-squared value of approximately **0.265** indicates that the seven features in the model explain about 26.5% of the variation in annual salary in the test data.
 
-The **R-squared value is approximately -0.028**, indicating that years of experience alone performs poorly as a predictor of annual salary on the testing data.
-
-This is an important result rather than simply a failed model. Salary differences in the AI job market may depend on many other factors, such as job category, industry, location, seniority, and specialization. A future version of the project could explore additional features.
+Compared with using years of experience alone, the expanded model incorporates additional job characteristics such as demand, AI salary premium, seniority, remote friendliness, and whether the position is LLM-related. However, much of the variation in salary remains unexplained, suggesting that other factors such as job category, industry, location, and company characteristics may also be important.
 
 ## Pandas vs. Polars Performance Comparison
 
@@ -220,26 +286,88 @@ For this dataset, Pandas was faster for filtering and grouping, while Polars was
 
 The Pandas and Polars analyses also produced the same results. For example, both returned 515 USA jobs, 445 fully remote jobs, 148 fully remote USA jobs, and 607 jobs with salaries above $200,000. The grouped average salaries and job counts by category were also consistent between the two libraries.
 
+## Automated Testing
+
+Automated tests are implemented using **pytest** to verify the reliability of the analysis workflow.
+
+The test suite includes checks for:
+
+- Data loading
+- USA job filtering
+- Fully remote USA job filtering
+- High-salary job filtering
+- High-salary filtering edge case
+- Salary grouping by job category
+- Machine learning model training and evaluation
+- Complete system execution and visualization generation
+
+The edge-case test verifies that using an extremely high salary threshold correctly returns an empty DataFrame.
+
+The machine learning test verifies that the model is successfully trained using all seven features and that valid evaluation metrics are returned.
+
+The system test runs the complete `main()` workflow and confirms that all eight expected visualization files are successfully generated.
+
+Run all tests with:
+
+```bash
+pytest
+```
+
+or with the Makefile:
+
+```bash
+make test
+```
+
+A successful test run should show:
+
+```text
+8 passed
+```
+
+## Continuous Integration
+
+This project uses **GitHub Actions** for continuous integration.
+
+Whenever changes are pushed to the repository, the CI workflow automatically sets up the Python environment, installs the required dependencies, and runs the test suite.
+
+This ensures that changes to the project do not accidentally break the data analysis workflow.
+
+The CI status badge at the top of this README provides a quick indication of whether the latest GitHub Actions workflow completed successfully.
+
+## Makefile
+
+A `Makefile` is included to provide simple and reproducible commands for common development tasks.
+
+For example:
+
+```bash
+make install
+make test
+```
+
+This makes dependency installation and automated testing easier to run consistently.
+
 ## Key Findings
 
-Overall, this initial analysis found that:
+Overall, the analysis shows that:
 
 - The dataset is complete, with no missing or duplicated observations.
 - About one-third of the job postings are located in the USA.
-- There are 445 fully remote positions.
-- Average salaries vary substantially across job categories.
+- The dataset contains 445 fully remote positions.
+- Salaries vary substantially across AI job categories.
 - Architecture has the highest average salary among the job categories in this dataset.
-- Years of experience alone is not a strong predictor of annual salary.
-- Other job characteristics may be important for explaining salary differences.
+- Salary patterns also vary by remote work arrangement and whether a position is LLM-related.
+- Job demand and salary can be explored together to better understand differences across AI roles.
+- Multiple job characteristics can be incorporated into the salary prediction model rather than relying on a single feature.
 
 ## Next Steps
 
 This project will be extended in future assignments. Possible next steps include:
 
-- Refactoring the analysis into reusable Python functions
-- Adding automated tests with `pytest`
-- Improving the machine learning analysis with additional features
-- Adding continuous integration
-- Containerizing the project with Docker
-
-These additions will make the analysis easier to test, reproduce, and maintain.
+- Adding additional edge-case tests
+- Experimenting with additional machine learning algorithms
+- Comparing model performance across different feature sets
+- Adding more preprocessing and feature engineering
+- Expanding the analysis to larger or real-time job market datasets
+- Further developing the containerized workflow with Docker
