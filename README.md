@@ -1,6 +1,8 @@
 # IDS706-AI-Jobs-Project
 # AI Jobs Market Analysis
 
+[![CI](https://github.com/yihanc09/IDS706-AI-Jobs-Project/actions/workflows/test.yml/badge.svg)](https://github.com/yihanc09/IDS706-AI-Jobs-Project/actions/workflows/test.yml)
+
 ## Project Overview
 
 This project explores an AI jobs market dataset containing 1,500 job postings and 25 variables. The dataset includes information about job titles, job categories, experience requirements, salaries, locations, remote work options, industries, and AI-related job characteristics.
