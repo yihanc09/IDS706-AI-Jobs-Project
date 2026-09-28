@@ -35,6 +35,20 @@ def test_filter_usa_jobs():
     assert (usa_jobs["country"] == "USA").all()
 
 
+def test_filter_usa_jobs_no_matches():
+    df = pd.DataFrame(
+        {
+            "country": ["Canada", "UK", "Germany"],
+            "annual_salary_usd": [120000, 150000, 180000],
+        }
+    )
+
+    usa_jobs = filter_usa_jobs(df)
+
+    assert isinstance(usa_jobs, pd.DataFrame)
+    assert len(usa_jobs) == 0
+
+
 def test_filter_usa_remote_jobs():
     df = load_data(DATA_FILE)
 
