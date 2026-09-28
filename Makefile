@@ -23,3 +23,10 @@ clean:
 	rm -rf src/__pycache__
 	rm -rf tests/__pycache__
 	rm -rf .pytest_cache
+
+format:
+	black src/ tests/
+
+lint:
+	black --check src/ tests/
+	flake8 src/ tests/

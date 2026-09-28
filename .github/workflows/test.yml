@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: make install
 
+      - name: Check formatting and linting
+        run: make lint
+
       - name: Run tests
         run: make test
 
