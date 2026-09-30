@@ -1,30 +1,44 @@
 # IDS706-AI-Jobs-Project
+
 # AI Jobs Market Analysis
 
 [![CI](https://github.com/yihanc09/IDS706-AI-Jobs-Project/actions/workflows/test.yml/badge.svg)](https://github.com/yihanc09/IDS706-AI-Jobs-Project/actions/workflows/test.yml)
 
-Screenshots:
-
-<img width="1071" height="333" alt="1" src="https://github.com/user-attachments/assets/41586255-7286-4e92-a0e1-304401f1cc26" />
-
-<img width="1120" height="201" alt="2" src="https://github.com/user-attachments/assets/2eb41181-ccdb-40e5-8920-dc6c6770dc3d" />
-
-
 ## Project Overview
 
-This project explores an AI jobs market dataset containing 1,500 job postings and 25 variables. The dataset includes information about job titles, job categories, experience requirements, salaries, locations, remote work options, industries, and AI-related job characteristics.
+This project analyzes a dataset of 1,500 AI job postings and 25
+variables to explore salary patterns, job demand, remote-work
+opportunities, and differences across AI job categories. The project
+also uses a multiple linear regression model to examine how several job
+characteristics are associated with annual salary.
 
-The project was initially developed as a basic data analysis workflow using Pandas, Matplotlib, Seaborn, and scikit-learn. It has since been refactored into reusable Python functions and extended with automated testing and continuous integration to make the analysis more reproducible and reliable.
+The main real-world question is:
+
+> **What characteristics of AI jobs are associated with differences in
+> salary and demand, and how can a small data-analysis workflow be made
+> reliable, reproducible, and portable?**
+
+The project began as a basic exploratory analysis using Pandas,
+Matplotlib, Seaborn, and scikit-learn. Across the three-week project, it
+was expanded and refactored into a reproducible workflow with reusable
+functions, automated tests, continuous integration, code-quality tools,
+and Docker containerization.
 
 The analysis includes:
 
-- Data loading and inspection
-- Filtering and grouping
-- Exploratory data visualization
-- Multiple linear regression for salary prediction
-- Pandas and Polars performance comparison
-- Unit and system testing with `pytest`
-- Continuous integration with GitHub Actions
+-   Data loading and inspection
+-   Data-quality diagnostics
+-   Missing-value and duplicate checks
+-   IQR-based salary outlier detection
+-   Filtering and grouping
+-   Eight exploratory visualizations
+-   Multiple linear regression for salary prediction
+-   Pandas and Polars performance comparison
+-   Unit, edge-case, and system testing with `pytest`
+-   Continuous integration with GitHub Actions
+-   Code-quality support with Black and Flake8
+-   Docker containerization
+-   Reproducible commands through a Makefile
 
 ## Dataset
 
@@ -58,45 +72,56 @@ IDS706-AI-Jobs-Project/
 │       └── test.yml
 ├── figures/
 ├── src/
-│   ├── part1_wk1-analysis.py
 │   └── main.py
 ├── tests/
 │   └── test_main.py
+├── .dockerignore
+├── .flake8
+├── .gitignore
 ├── ai_jobs_market_2025_2026.csv
 ├── polars_comparison.py
-├── rust_vs_python_intro.ipynb
 ├── Dockerfile
 ├── Makefile
 ├── requirements.txt
 └── README.md
 ```
 
-The original Week 1 analysis is preserved in `part1_wk1-analysis.py`. The refactored analysis is located in `src/main.py`, where the workflow is organized into reusable functions that can be independently tested.
-
 ## Setup
 
-The project uses Python and the following packages:
+### 1. Clone the repository
 
-- pandas
-- polars
-- matplotlib
-- seaborn
-- scikit-learn
-- pytest
+``` bash
+git clone https://github.com/yihanc09/IDS706-AI-Jobs-Project.git
+cd IDS706-AI-Jobs-Project
+```
 
-Install the required packages with:
+### 2. Install dependencies
 
-```bash
+``` bash
 python3 -m pip install -r requirements.txt
 ```
 
-Run the refactored analysis with:
+or:
 
-```bash
+``` bash
+make install
+```
+
+### 3. Run the analysis
+
+``` bash
 python3 src/main.py
 ```
 
-The script loads and inspects the dataset, performs filtering and grouping operations, trains the machine learning model, and generates the visualizations in the `figures/` directory.
+or:
+
+``` bash
+make run
+```
+
+Running the analysis loads and inspects the data, prints data-quality
+diagnostics and summary results, trains the regression model, and
+generates all eight plots in the `figures/` directory.
 
 The Pandas and Polars performance comparison can be run separately with:
 
@@ -106,49 +131,83 @@ python3 polars_comparison.py
 
 ## Data Inspection
 
-I first loaded the dataset using Pandas and inspected it using:
+The dataset is first inspected using:
 
-- `.head()` to view the first five rows
-- `.info()` to examine the number of observations, columns, and data types
-- `.describe()` to examine summary statistics
-- `.isnull().sum()` to check for missing values
-- `.duplicated().sum()` to check for duplicated rows
+-   `.head()` to preview observations
+-   `.info()` to inspect dimensions and data types
+-   `.describe()` to examine summary statistics
+-   `.isnull().sum()` to check missing values
+-   `.duplicated().sum()` to check duplicated rows
 
-The dataset contains **1,500 rows and 25 columns**. There are **no missing values** and **no duplicated rows**.
+The dataset contains **1,500 rows and 25 columns**, with **no missing
+values** and **no duplicated rows**.
 
-The mean annual salary is approximately **$194,892**, while the median annual salary is **$180,000**. Salaries range from **$90,000 to $384,000**.
+The mean annual salary is approximately **\$194,892**, the median is
+approximately **\$180,000**, and salaries range from approximately
+**\$90,000 to \$384,000**.
 
-## Filtering
+### Data Quality and Outlier Treatment
 
-I created several subsets of the dataset to explore different parts of the AI job market.
+As an additional project enhancement, I created a reusable
+`summarize_data_quality()` function. It reports:
 
-The analysis found:
+-   Number of rows and columns
+-   Total missing values
+-   Number of duplicated rows
+-   Minimum and maximum salary
+-   Number of potential salary outliers
+-   Lower and upper salary-outlier bounds
 
-- **515** jobs located in the USA
-- **445** fully remote jobs
-- **148** jobs that are both fully remote and located in the USA
-- **607** jobs with an annual salary above $200,000
+Potential salary outliers are identified using the **1.5 × IQR rule**:
 
-These filters demonstrate how Pandas can be used to select observations based on one or multiple conditions.
+``` text
+Lower bound = Q1 - 1.5 × IQR
+Upper bound = Q3 + 1.5 × IQR
+```
 
-## Grouping
+The workflow reports potential salary outliers rather than automatically
+deleting them. High salaries can represent meaningful variation in
+senior, specialized, or high-demand AI positions rather than data-entry
+errors. Because the dataset contains no missing values or duplicated
+rows, no imputation or duplicate removal is required.
 
-I grouped the data by `job_category` to compare salaries across different types of AI jobs.
+This data-quality summary was added as an original improvement to make
+data validation more explicit and reproducible.
 
-The category with the highest average annual salary was **Architecture**, at approximately **$251,577**.
 
-Some other average salaries were:
+## Filtering and Grouping
 
-- AI Engineering: approximately $207,982
-- Infrastructure: approximately $203,527
-- Security: approximately $200,400
-- Data Science: approximately $181,276
-- Governance: approximately $152,516
-- Business: approximately $134,145
+Reusable filtering functions examine several useful subsets of the AI
+job market.
 
-The dataset contains substantially more AI Engineering jobs than any other category, with **736 AI Engineering positions**.
+The analysis finds:
+
+-   **515** jobs located in the USA
+-   **445** fully remote jobs
+-   **148** jobs that are both fully remote and located in the USA
+-   **607** jobs with annual salaries above \$200,000
+
+The data is also grouped by variables such as job category, remote-work
+arrangement, and LLM-role status.
+
+The category with the highest average annual salary is **Architecture**,
+at approximately **\$251,577**.
+
+Selected average salaries by category include:
+
+-   AI Engineering: approximately \$207,982
+-   Infrastructure: approximately \$203,527
+-   Security: approximately \$200,400
+-   Data Science: approximately \$181,276
+-   Governance: approximately \$152,516
+-   Business: approximately \$134,145
+
+AI Engineering is also the largest category in the dataset, with **736
+positions**.
 
 ## Visualizations
+
+The final workflow automatically generates **eight figures**.
 
 ### 1. Average Annual Salary by AI Job Category
 
@@ -208,7 +267,8 @@ This plot explores whether jobs with higher demand scores also tend to have high
 
 ## Machine Learning
 
-For the machine learning portion of the project, I used a **Linear Regression** model.
+The project uses **multiple linear regression** to predict
+`annual_salary_usd`.
 
 The target variable is:
 
@@ -299,10 +359,15 @@ The Pandas and Polars analyses also produced the same results. For example, both
 
 Automated tests are implemented using **pytest** to verify the reliability of the analysis workflow.
 
-The test suite includes checks for:
+The test suite contains **10 tests** covering typical behavior,
+meaningful edge cases, model execution, and the complete workflow.
+
+The tests cover:
 
 - Data loading
+- Data-quality summary generation
 - USA job filtering
+- USA filtering when no matching observations exist
 - Fully remote USA job filtering
 - High-salary job filtering
 - High-salary filtering edge case
@@ -310,7 +375,12 @@ The test suite includes checks for:
 - Machine learning model training and evaluation
 - Complete system execution and visualization generation
 
-The edge-case test verifies that using an extremely high salary threshold correctly returns an empty DataFrame.
+Two meaningful edge cases are explicitly tested:
+
+1.  A dataset containing no USA jobs should return an empty DataFrame
+    rather than fail.
+2.  An extremely high salary threshold should return an empty DataFrame
+    rather than fail.
 
 The machine learning test verifies that the model is successfully trained using all seven features and that valid evaluation metrics are returned.
 
@@ -331,12 +401,17 @@ make test
 A successful test run should show:
 
 ```text
-8 passed
+10 passed
 ```
 
 ## Continuous Integration
 
-This project uses **GitHub Actions** for continuous integration.
+This project uses **GitHub Actions** for continuous integration. The
+workflow is stored in:
+
+``` text
+.github/workflows/test.yml
+```
 
 Whenever changes are pushed to the repository, the CI workflow automatically sets up the Python environment, installs the required dependencies, and runs the test suite.
 
@@ -344,39 +419,211 @@ This ensures that changes to the project do not accidentally break the data anal
 
 The CI status badge at the top of this README provides a quick indication of whether the latest GitHub Actions workflow completed successfully.
 
+### CI / Test Evidence
+
+`<img width="700" alt="CI screenshot 1" src="https://github.com/user-attachments/assets/41586255-7286-4e92-a0e1-304401f1cc26" />`{=html}
+
+`<img width="700" alt="CI screenshot 2" src="https://github.com/user-attachments/assets/2eb41181-ccdb-40e5-8920-dc6c6770dc3d" />`{=html}
+
+## Docker and Containerization
+
+A `Dockerfile` is included so the project can run in a consistent Python
+3.12 environment with all required dependencies installed.
+
+### Basic Docker Practice
+
+The project supports the standard Docker workflow:
+
+``` bash
+docker pull python:3.12-slim
+docker build -t ai-jobs-project .
+docker images
+docker run --rm ai-jobs-project
+docker ps
+```
+
+The same workflow is available through the Makefile.
+
+### Build the image
+
+``` bash
+make docker-build
+```
+
+### Run the analysis inside the container
+
+``` bash
+make docker-run
+```
+
+### Run the tests inside the container
+
+``` bash
+make docker-test
+```
+
+The Docker workflow showed how containerization packages the code,
+Python runtime, and dependencies into the same environment. This reduces
+differences between local machines and makes the analysis easier to
+reproduce.
+
+### Docker Evidence
+
+
+
+## Refactoring and Code Quality
+
+The original project was written primarily as a sequential analysis
+script. The final version was refactored into smaller reusable functions
+so that individual parts of the workflow can be understood, reused, and
+tested independently.
+
+Major refactoring improvements include:
+
+-   Extracting data loading into `load_data()`
+-   Separating inspection into `inspect_data()`
+-   Adding `summarize_data_quality()` for reusable data validation
+-   Separating each filtering operation into a dedicated function
+-   Separating grouping calculations into reusable functions
+-   Creating individual visualization functions
+-   Creating `save_figure()` to remove repeated figure-saving code
+-   Moving model training and evaluation into `train_salary_model()`
+-   Keeping `main()` as the coordinator of the complete workflow
+-   Adding readable labels for LLM vs. non-LLM roles
+-   Updating tests after refactoring
+
+These changes improve readability and reduce duplicated code. More
+importantly, they make core analytical operations independently
+testable.
+
+### Code-Quality Tools
+
+`black` and `flake8` are included in `requirements.txt`.
+
+Formatting can be checked with:
+
+``` bash
+black --check src tests
+```
+
+Code style can be checked with:
+
+``` bash
+flake8 src tests
+```
+
+The repository also includes a `.flake8` configuration file.
+
+### Verification After Refactoring
+
+The refactored project was verified at multiple levels:
+
+``` bash
+make test
+make docker-build
+make docker-test
+make docker-run
+```
+
+The automated test suite checks individual functions as well as the
+complete workflow, while the Docker test confirms that the project also
+works in a clean containerized environment.
+
+### Refactoring Commit Diff
+
+
+
 ## Makefile
 
 A `Makefile` is included to provide simple and reproducible commands for common development tasks.
 
-For example:
-
-```bash
+``` bash
 make install
 make test
+make run
+make docker-build
+make docker-test
+make docker-run
+make clean
 ```
 
-This makes dependency installation and automated testing easier to run consistently.
+This reduces the need to remember longer commands and helps keep local
+and containerized workflows consistent.
 
 ## Key Findings
 
 Overall, the analysis shows that:
 
-- The dataset is complete, with no missing or duplicated observations.
-- About one-third of the job postings are located in the USA.
-- The dataset contains 445 fully remote positions.
-- Salaries vary substantially across AI job categories.
-- Architecture has the highest average salary among the job categories in this dataset.
-- Salary patterns also vary by remote work arrangement and whether a position is LLM-related.
-- Job demand and salary can be explored together to better understand differences across AI roles.
-- Multiple job characteristics can be incorporated into the salary prediction model rather than relying on a single feature.
+-   The dataset is complete, with no missing or duplicated observations.
+-   About one-third of the postings are located in the USA.
+-   The dataset contains 445 fully remote positions.
+-   Salaries vary substantially across AI job categories.
+-   Architecture has the highest average salary among the categories in
+    this dataset.
+-   AI Engineering is the largest job category in the dataset.
+-   Salary variation remains substantial even among jobs with similar
+    experience requirements.
+-   Remote-work arrangement and LLM-role status provide additional
+    dimensions for comparing salary distributions.
+-   Demand score can be examined alongside salary to explore how market
+    demand relates to compensation.
+-   A seven-feature linear regression explains only part of salary
+    variation, showing the limitations of relying on a small set of
+    numeric and binary predictors.
+-   Explicit data-quality checks, tests, CI, and Docker make the
+    analysis more reliable and reproducible than the original
+    exploratory script.
 
-## Next Steps
+## Original Project Enhancements
 
-This project will be extended in future assignments. Possible next steps include:
+Beyond the initial assignment requirements, I added several
+project-specific improvements:
 
-- Adding additional edge-case tests
-- Experimenting with additional machine learning algorithms
-- Comparing model performance across different feature sets
-- Adding more preprocessing and feature engineering
-- Expanding the analysis to larger or real-time job market datasets
-- Further developing the containerized workflow with Docker
+-   A reusable **Data Quality Summary**
+-   IQR-based salary outlier diagnostics
+-   Additional salary and demand visualizations
+-   Human-readable labels for LLM vs. non-LLM roles
+-   An expanded seven-feature salary model
+-   Edge-case tests for empty filtering results
+-   A Pandas vs. Polars performance comparison
+-   A system test that verifies all expected visualization outputs
+
+These additions connect software-engineering practices with the
+analytical goal of understanding the AI job market.
+
+## Limitations and Future Work
+
+This dataset is relatively small and represents a specific snapshot of
+the AI job market, so the findings should not be interpreted as a
+complete representation of all AI employment.
+
+Future improvements could include:
+
+-   Adding categorical variables such as industry, country, and job
+    category to the predictive model
+-   Comparing linear regression with tree-based or regularized models
+-   Using cross-validation for more robust model evaluation
+-   Studying interaction effects among experience, job category, remote
+    work, and LLM specialization
+-   Testing the Pandas--Polars comparison on much larger datasets
+-   Adding more edge-case tests for malformed or missing input data
+-   Extending the workflow to newer or continuously updated job-market
+    data
+
+## Final Reproducibility Checklist
+
+A new user should be able to reproduce the project by running:
+
+``` bash
+make install
+make test
+make run
+```
+
+or, using Docker:
+
+``` bash
+make docker-build
+make docker-test
+make docker-run
+```
