@@ -33,6 +33,32 @@ def inspect_data(df):
     print(df.duplicated().sum())
 
 
+def summarize_data_quality(df):
+    """Return key data-quality diagnostics for the AI jobs dataset."""
+    salary = df["annual_salary_usd"]
+
+    q1 = salary.quantile(0.25)
+    q3 = salary.quantile(0.75)
+    iqr = q3 - q1
+
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+
+    salary_outliers = (salary < lower_bound) | (salary > upper_bound)
+
+    return {
+        "rows": len(df),
+        "columns": len(df.columns),
+        "missing_values": int(df.isna().sum().sum()),
+        "duplicate_rows": int(df.duplicated().sum()),
+        "min_salary": salary.min(),
+        "max_salary": salary.max(),
+        "salary_outliers_iqr": int(salary_outliers.sum()),
+        "salary_outlier_lower_bound": lower_bound,
+        "salary_outlier_upper_bound": upper_bound,
+    }
+
+
 # Filtering
 def filter_usa_jobs(df):
     """Return jobs located in the USA."""
@@ -239,6 +265,26 @@ def main():
 
     # Inspect data
     inspect_data(df)
+
+    # Data quality
+    quality_summary = summarize_data_quality(df)
+
+    print("\nData Quality Summary:")
+    print(f"Rows: {quality_summary['rows']}")
+    print(f"Columns: {quality_summary['columns']}")
+    print(f"Missing values: {quality_summary['missing_values']}")
+    print(f"Duplicate rows: {quality_summary['duplicate_rows']}")
+    print(f"Minimum salary: ${quality_summary['min_salary']:,.0f}")
+    print(f"Maximum salary: ${quality_summary['max_salary']:,.0f}")
+    print(
+        "Potential salary outliers (IQR rule): "
+        f"{quality_summary['salary_outliers_iqr']}"
+    )
+    print(
+        "IQR outlier range: "
+        f"${quality_summary['salary_outlier_lower_bound']:,.0f} to "
+        f"${quality_summary['salary_outlier_upper_bound']:,.0f}"
+    )
 
     # Filtering
     usa_jobs = filter_usa_jobs(df)

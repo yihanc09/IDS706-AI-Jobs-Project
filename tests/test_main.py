@@ -4,6 +4,7 @@ import pandas as pd
 
 from src.main import (
     load_data,
+    summarize_data_quality,
     filter_usa_jobs,
     filter_usa_remote_jobs,
     filter_high_salary_jobs,
@@ -23,6 +24,24 @@ def test_load_data():
     assert "job_id" in df.columns
     assert "annual_salary_usd" in df.columns
     assert "years_of_experience" in df.columns
+
+
+def test_summarize_data_quality():
+    df = pd.DataFrame(
+        {
+            "annual_salary_usd": [100000, 150000, 200000, None],
+            "job_title": ["Data Scientist", "ML Engineer", "AI Engineer", "Other"],
+        }
+    )
+
+    summary = summarize_data_quality(df)
+
+    assert summary["rows"] == 4
+    assert summary["columns"] == 2
+    assert summary["missing_values"] == 1
+    assert summary["duplicate_rows"] == 0
+    assert summary["min_salary"] == 100000
+    assert summary["max_salary"] == 200000
 
 
 def test_filter_usa_jobs():
