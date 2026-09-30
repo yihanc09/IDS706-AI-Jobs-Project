@@ -98,22 +98,10 @@ cd IDS706-AI-Jobs-Project
 ### 2. Install dependencies
 
 ``` bash
-python3 -m pip install -r requirements.txt
-```
-
-or:
-
-``` bash
 make install
 ```
 
 ### 3. Run the analysis
-
-``` bash
-python3 src/main.py
-```
-
-or:
 
 ``` bash
 make run
@@ -419,12 +407,6 @@ This ensures that changes to the project do not accidentally break the data anal
 
 The CI status badge at the top of this README provides a quick indication of whether the latest GitHub Actions workflow completed successfully.
 
-### CI / Test Evidence
-
-`<img width="700" alt="CI screenshot 1" src="https://github.com/user-attachments/assets/41586255-7286-4e92-a0e1-304401f1cc26" />`{=html}
-
-`<img width="700" alt="CI screenshot 2" src="https://github.com/user-attachments/assets/2eb41181-ccdb-40e5-8920-dc6c6770dc3d" />`{=html}
-
 ## Docker and Containerization
 
 A `Dockerfile` is included so the project can run in a consistent Python
@@ -469,7 +451,9 @@ reproduce.
 
 ### Docker Evidence
 
+<img width="554" height="177" alt="1" src="https://github.com/user-attachments/assets/f7e014d0-6765-4f68-bf97-b06970294341" />
 
+<img width="1081" height="469" alt="2" src="https://github.com/user-attachments/assets/ea41c566-dffe-42fa-addb-6e566b771844" />
 
 ## Refactoring and Code Quality
 
@@ -531,7 +515,7 @@ works in a clean containerized environment.
 
 ### Refactoring Commit Diff
 
-
+<img width="1087" height="732" alt="3" src="https://github.com/user-attachments/assets/680084c9-5887-4d29-968f-a37d839a9923" />
 
 ## Makefile
 
