@@ -95,6 +95,13 @@ def calculate_demand_by_category(df):
 
 
 # Visualization
+def save_figure(filename):
+    """Save the current figure to the figures directory and close it."""
+    plt.tight_layout()
+    plt.savefig(f"figures/{filename}")
+    plt.close()
+
+
 def create_salary_by_category_plot(df):
     salary_by_category = calculate_salary_by_category(df)
 
@@ -103,10 +110,7 @@ def create_salary_by_category_plot(df):
     plt.title("Average Annual Salary by AI Job Category")
     plt.xlabel("Average Annual Salary (USD)")
     plt.ylabel("Job Category")
-    plt.tight_layout()
-
-    plt.savefig("figures/salary_by_category.png")
-    plt.close()
+    save_figure("salary_by_category.png")
 
 
 def create_salary_distribution_plot(df):
@@ -117,10 +121,7 @@ def create_salary_distribution_plot(df):
     plt.title("Distribution of Annual Salaries")
     plt.xlabel("Annual Salary (USD)")
     plt.ylabel("Number of Jobs")
-    plt.tight_layout()
-
-    plt.savefig("figures/salary_distribution.png")
-    plt.close()
+    save_figure("salary_distribution.png")
 
 
 def create_salary_by_experience_plot(df):
@@ -131,10 +132,7 @@ def create_salary_by_experience_plot(df):
     plt.title("Annual Salary by Experience Level")
     plt.xlabel("Experience Level")
     plt.ylabel("Annual Salary (USD)")
-    plt.tight_layout()
-
-    plt.savefig("figures/salary_by_experience_level.png")
-    plt.close()
+    save_figure("salary_by_experience_level.png")
 
 
 def create_experience_salary_plot(df):
@@ -150,10 +148,7 @@ def create_experience_salary_plot(df):
     plt.title("Years of Experience vs Annual Salary")
     plt.xlabel("Years of Experience")
     plt.ylabel("Annual Salary (USD)")
-    plt.tight_layout()
-
-    plt.savefig("figures/experience_vs_salary.png")
-    plt.close()
+    save_figure("experience_vs_salary.png")
 
 
 def create_remote_salary_plot(df):
@@ -164,10 +159,8 @@ def create_remote_salary_plot(df):
     plt.title("Annual Salary by Remote Work Type")
     plt.xlabel("Remote Work Type")
     plt.ylabel("Annual Salary (USD)")
-    plt.tight_layout()
 
-    plt.savefig("figures/salary_by_remote_work.png")
-    plt.close()
+    save_figure("salary_by_remote_work.png")
 
 
 def create_llm_salary_plot(df):
@@ -179,10 +172,7 @@ def create_llm_salary_plot(df):
     plt.xlabel("Role Type")
     plt.ylabel("Annual Salary (USD)")
     plt.xticks([0, 1], ["Non-LLM Role", "LLM Role"])
-    plt.tight_layout()
-
-    plt.savefig("figures/salary_by_llm_role.png")
-    plt.close()
+    save_figure("salary_by_llm_role.png")
 
 
 def create_demand_by_category_plot(df):
@@ -193,10 +183,7 @@ def create_demand_by_category_plot(df):
     plt.title("Average Demand Score by AI Job Category")
     plt.xlabel("Average Demand Score")
     plt.ylabel("Job Category")
-    plt.tight_layout()
-
-    plt.savefig("figures/demand_by_category.png")
-    plt.close()
+    save_figure("demand_by_category.png")
 
 
 def create_demand_salary_plot(df):
@@ -209,10 +196,7 @@ def create_demand_salary_plot(df):
     plt.title("Demand Score vs Annual Salary")
     plt.xlabel("Demand Score")
     plt.ylabel("Annual Salary (USD)")
-    plt.tight_layout()
-
-    plt.savefig("figures/demand_vs_salary.png")
-    plt.close()
+    save_figure("demand_vs_salary.png")
 
 
 # Machine Learning
